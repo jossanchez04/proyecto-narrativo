@@ -222,7 +222,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Run_East_StripSheet_0: 2493519482029951734
+      Run_East_StripSheet_1: -4509132484875947415
+      Run_East_StripSheet_2: 8972140994786386353
+      Run_East_StripSheet_3: 974044654501520714
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
