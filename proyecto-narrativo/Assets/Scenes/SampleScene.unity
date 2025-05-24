@@ -250,8 +250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64eb86521b9e59147b03e3496990d438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  food: -5
-  water: 5
+  food: -1
+  water: 1
   morale: 2
   moraleThreshold: 3
 --- !u!114 &84914181
@@ -405,7 +405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   food: 1
-  water: 1
+  water: -1
   morale: 1
   moraleThreshold: 3
 --- !u!114 &94182980
@@ -556,9 +556,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64eb86521b9e59147b03e3496990d438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  food: 1
+  food: 2
   water: 1
-  morale: 1
+  morale: -2
   moraleThreshold: 3
 --- !u!114 &101637476
 MonoBehaviour:
@@ -11217,8 +11217,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64eb86521b9e59147b03e3496990d438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  food: 1
-  water: 1
+  food: 2
+  water: -1
   morale: 1
   moraleThreshold: 3
 --- !u!114 &1291231527
@@ -11636,9 +11636,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64eb86521b9e59147b03e3496990d438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  food: 1
-  water: 1
-  morale: 1
+  food: -1
+  water: 2
+  morale: -1
   moraleThreshold: 3
 --- !u!114 &2107904927
 MonoBehaviour:
