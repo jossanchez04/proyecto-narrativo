@@ -40,15 +40,14 @@ public class NPC_Wander : MonoBehaviour
 
         MoveOneDirection();
 
-        // Check if we have reached the target
         Vector2 currentPos = transform.position;
-        if (!xDone && Mathf.Abs(target.x - currentPos.x) < 0.1f)
+        if (!xDone && Mathf.Abs(target.x - currentPos.x) < 1f)
         {
             rb.linearVelocity = Vector2.zero;
             xDone = true;
             movingHorizontally = false;
         }
-        if (!yDone && Mathf.Abs(target.y - currentPos.y) < 0.1f)
+        if (!yDone && Mathf.Abs(target.y - currentPos.y) < 1f)
         {
             rb.linearVelocity = Vector2.zero;
             yDone = true;
