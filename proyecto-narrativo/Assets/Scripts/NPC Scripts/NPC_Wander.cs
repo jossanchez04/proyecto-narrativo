@@ -1,8 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using Unity.Hierarchy;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 
 public class NPC_Wander : MonoBehaviour
 {
@@ -18,6 +15,9 @@ public class NPC_Wander : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private bool isPaused = false;
+    private bool movingHorizontally = true;
+    private bool xDone = false;
+    private bool yDone = false;
 
     private void Awake()
     {
@@ -38,19 +38,43 @@ public class NPC_Wander : MonoBehaviour
             return;
         }
 
-        if (Vector2.Distance(transform.position, target) < .1f)
+        MoveOneDirection();
+
+        // Check if we have reached the target
+        Vector2 currentPos = transform.position;
+        if (!xDone && Mathf.Abs(target.x - currentPos.x) < 0.1f)
+        {
+            rb.linearVelocity = Vector2.zero;
+            xDone = true;
+            movingHorizontally = false;
+        }
+        if (!yDone && Mathf.Abs(target.y - currentPos.y) < 0.1f)
+        {
+            rb.linearVelocity = Vector2.zero;
+            yDone = true;
+        }
+
+        if (xDone && yDone)
         {
             StartCoroutine(PauseAndPickNewDestination());
         }
-
-        Move();
     }
 
-    private void Move()
+    private void MoveOneDirection()
     {
-        Vector2 direction = (target - (Vector2)transform.position).normalized;
-        if(direction.x > 0 && transform.localScale.x < 0 || direction.x < 0 && transform.localScale.x > 0)
-            transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
+        Vector2 currentPos = transform.position;
+        Vector2 direction = Vector2.zero;
+
+        if (!xDone && movingHorizontally)
+        {
+            direction = (target.x > currentPos.x) ? Vector2.right : Vector2.left;
+            anim.Play(target.x > currentPos.x ? "walkRight" : "walkLeft");
+        }
+        else if (!yDone)
+        {
+            direction = (target.y > currentPos.y) ? Vector2.up : Vector2.down;
+            anim.Play(target.y > currentPos.y ? "walkUp" : "walkDown");
+        }
 
         rb.linearVelocity = direction * speed;
     }
@@ -58,13 +82,15 @@ public class NPC_Wander : MonoBehaviour
     IEnumerator PauseAndPickNewDestination()
     {
         isPaused = true;
+        rb.linearVelocity = Vector2.zero;
         anim.Play("idle");
         yield return new WaitForSeconds(pauseDuration);
 
         target = GetRandomTarget();
-        print("New target: " + target);
+        xDone = false;
+        yDone = false;
+        movingHorizontally = true;
         isPaused = false;
-        anim.Play("walkDown");
     }
 
     private Vector2 GetRandomTarget()
@@ -82,11 +108,10 @@ public class NPC_Wander : MonoBehaviour
         };
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         StartCoroutine(PauseAndPickNewDestination());
     }
-
 
     private void OnDrawGizmosSelected()
     {
