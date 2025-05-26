@@ -1,8 +1,11 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     public static event Action OnDayPassedEvent;
 
     public static int totalFood = 10;
@@ -12,14 +15,20 @@ public class GameManager : MonoBehaviour
     public float dayLength = 5f;
     private float dayTimer = 0f;
 
+    private List<NPC_Info> expeditionParty = new List<NPC_Info>();
+    public int maxExpeditionSize = 4;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         dayTimer += Time.deltaTime;
@@ -33,9 +42,8 @@ public class GameManager : MonoBehaviour
         if (totalFood <= 0 || totalWater <= 0 || totalMorale <= 0)
         {
             Debug.Log("Game Over! You have run out of resources.");
-            // Here you can add logic to end the game or restart it
+            
         }
-        
     }
 
     private void DayPassed()
@@ -55,4 +63,64 @@ public class GameManager : MonoBehaviour
         totalWater = Mathf.Max(0, totalWater);
         totalMorale = Mathf.Max(0, totalMorale);
     }
+
+    // -------------------------
+    //    EXPEDICIÓN
+    // -------------------------
+
+    public bool AddToExpedition(NPC_Info npc)
+    {
+        if (expeditionParty.Contains(npc))
+        {
+            Debug.Log("Este NPC ya está en la expedición.");
+            return false;
+        }
+
+        if (expeditionParty.Count >= maxExpeditionSize)
+        {
+            Debug.Log("Ya hay suficientes NPCs en la expedición.");
+            return false;
+        }
+
+        expeditionParty.Add(npc);
+        Debug.Log($"{npc.npcName} agregado a la expedición.");
+
+        return true;
+    }
+
+    public void ClearExpedition()
+    {
+        expeditionParty.Clear();
+    }
+
+    public float SimulateExpeditionSuccess()
+    {
+        if (expeditionParty.Count == 0)
+        {
+            Debug.LogWarning("No hay NPCs en la expedición.");
+            return 0f;
+        }
+
+        float totalStrength = 0f;
+        float totalFoodEffect = 0f;
+        float totalWaterEffect = 0f;
+
+        foreach (var npc in expeditionParty)
+        {
+            totalStrength += npc.strenght;
+            totalFoodEffect += npc.food;
+            totalWaterEffect += npc.water;
+        }
+
+        float strengthScore = totalStrength * 10f;
+
+        float resourceScore = (totalFoodEffect + totalWaterEffect) * 2f;
+
+        float baseChance = strengthScore + resourceScore;
+        float successChance = Mathf.Clamp(baseChance, 0f, 100f);
+
+        Debug.Log($"Probabilidad de éxito de la expedición: {successChance}%");
+        return successChance;
+    }
 }
+
