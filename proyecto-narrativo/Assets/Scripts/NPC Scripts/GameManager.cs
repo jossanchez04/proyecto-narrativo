@@ -4,7 +4,14 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public NPCPresentationManager npcPresentationManager;
+
     public static GameManager Instance;
+
+    public GameObject[] npcPrefabs;
+
+    public int minStatValue = -5;
+    public int maxStatValue = 5;
 
     public static event Action OnDayPassedEvent;
 
@@ -15,6 +22,8 @@ public class GameManager : MonoBehaviour
     public float dayLength = 5f;
     private float dayTimer = 0f;
 
+    private List<NPC_Info> spawnedNPCs = new List<NPC_Info>();
+    private List<NPC_Info> acceptedNPCs = new List<NPC_Info>();
     private List<NPC_Info> expeditionParty = new List<NPC_Info>();
     public int maxExpeditionSize = 4;
 
@@ -26,7 +35,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-
+        SpawnRandomNPC();
     }
 
     void Update()
@@ -121,6 +130,71 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Probabilidad de éxito de la expedición: {successChance}%");
         return successChance;
+    }
+
+    public void SpawnRandomNPC()
+    {
+        if (npcPrefabs == null || npcPrefabs.Length == 0)
+        {
+            Debug.LogWarning("No NPC prefabs assigned!");
+            return;
+        }
+
+        if (NPC_Stories.npcStories == null || NPC_Stories.npcStories.Count == 0)
+        {
+            Debug.LogWarning("No NPC stories found!");
+            return;
+        }
+
+        // Pick a random prefab
+        GameObject prefab = npcPrefabs[UnityEngine.Random.Range(0, npcPrefabs.Length)];
+        NPCStory story = NPC_Stories.npcStories[UnityEngine.Random.Range(0, NPC_Stories.npcStories.Count)];
+
+        // Instantiate it (optionally set position and rotation)
+        GameObject npcInstance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+
+        // Get the NPC_Wander component
+        NPC_Wander wander = npcInstance.GetComponent<NPC_Wander>();
+
+        if (wander != null)
+        {
+            // Random position inside wander area rectangle
+            float halfWidth = wander.wanderWidth / 2f;
+            float halfHeight = wander.wanderHeight / 2f;
+
+            float randomX = UnityEngine.Random.Range(wander.startingPosition.x - halfWidth, wander.startingPosition.x + halfWidth);
+            float randomY = UnityEngine.Random.Range(wander.startingPosition.y - halfHeight, wander.startingPosition.y + halfHeight);
+
+            npcInstance.transform.position = new Vector2(randomX, randomY);
+        }
+        else
+        {
+            Debug.LogWarning("NPC prefab missing NPC_Wander component, spawning at (0,0)");
+        }
+
+        // Get the NPC_Info component
+        NPC_Info npcInfo = npcInstance.GetComponent<NPC_Info>();
+
+        if (npcInfo != null)
+        {
+            // Assign random stats
+            npcInfo.food = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
+            npcInfo.water = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
+            npcInfo.morale = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
+            npcInfo.materials = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
+            npcInfo.strenght = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
+
+            // Assign a random backstory
+            npcInfo.npcBackstory = story.npcBackstory;
+
+            // Optionally assign a random or unique npcName (e.g. "NPC" + a number)
+            npcInfo.npcName = story.npcName;
+        }
+        else
+        {
+            Debug.LogWarning("The instantiated NPC prefab does not have an NPC_Info component.");
+        }
+        Debug.Log($"NPC {npcInfo.npcName} spawned with backstory: {npcInfo.npcBackstory} and stats: Food={npcInfo.food}, Water={npcInfo.water}, Morale={npcInfo.morale}, Materials={npcInfo.materials}, Strength={npcInfo.strenght}.");
     }
 }
 
