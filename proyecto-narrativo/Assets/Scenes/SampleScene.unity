@@ -11351,7 +11351,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1163282070
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11830,6 +11830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e43a5e0a23de544a02436a6060bf86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  npcPresentationManager: {fileID: 0}
   npcPrefabs:
   - {fileID: 923181440819057894, guid: 006512b06e8b3794880256380f6ccf3f, type: 3}
   - {fileID: 3351620424700789939, guid: baecab0835878384fa1b8e0907760b43, type: 3}
