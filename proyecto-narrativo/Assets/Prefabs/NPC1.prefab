@@ -143,6 +143,7 @@ MonoBehaviour:
   materials: 0
   strenght: 2
   moraleThreshold: 3
+  avatarSprite: {fileID: 0}
 --- !u!1 &8211502271581987973
 GameObject:
   m_ObjectHideFlags: 0

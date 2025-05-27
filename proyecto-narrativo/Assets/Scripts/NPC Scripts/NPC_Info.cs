@@ -15,6 +15,9 @@ public class NPC_Info : MonoBehaviour
     [Header("NPC Morale Impact")]
     public int moraleThreshold;
 
+    [Header("NPC Avatar")]
+    public Sprite avatarSprite;
+
     void OnEnable()
     {
         GameManager.OnDayPassedEvent += OnDayPassed;

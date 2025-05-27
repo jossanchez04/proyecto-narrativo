@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 
 public class NPCPresentationManager : MonoBehaviour
 {
-    public Text nameText;
-    public Text dialogueText;
+    [Header("UI Elements")]
+    public Image avatarImage;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI dialogueText;
     public Button acceptButton;
     public Button rejectButton;
 
@@ -16,20 +19,8 @@ public class NPCPresentationManager : MonoBehaviour
 
     private NPC_Info currentNPC;
 
-    private void Awake()
-    {
-        if (nameText == null)
-            nameText = GameObject.Find("NPCName").GetComponent<Text>();
+    public event Action OnPresentationComplete;
 
-        if (dialogueText == null)
-            dialogueText = GameObject.Find("NPCStory").GetComponent<Text>();
-
-        if (acceptButton == null)
-            acceptButton = GameObject.Find("Accept").GetComponent<Button>();
-
-        if (rejectButton == null)
-            rejectButton = GameObject.Find("Reject").GetComponent<Button>();
-    }
 
     private void Start()
     {
@@ -39,6 +30,8 @@ public class NPCPresentationManager : MonoBehaviour
 
     public void PresentNPCs(List<NPC_Info> npcsToPresent)
     {
+        Debug.Log("PresentNPCs called, activating panel");
+        gameObject.SetActive(true);
         npcQueue.Clear();
         foreach (var npc in npcsToPresent)
             npcQueue.Enqueue(npc);
@@ -50,14 +43,31 @@ public class NPCPresentationManager : MonoBehaviour
     {
         if (npcQueue.Count == 0)
         {
+            Debug.Log("All NPCs presented, hiding panel");
             gameObject.SetActive(false); // Hide panel when done
+            OnPresentationComplete?.Invoke();
             return;
         }
 
         currentNPC = npcQueue.Dequeue();
 
-        nameText.text = currentNPC.npcName;
-        dialogueText.text = currentNPC.npcBackstory;
+        if (nameText != null)
+        {
+            Debug.Log($"Setting name text: {currentNPC?.npcName ?? "No Name"}");
+            nameText.text = currentNPC?.npcName ?? "No Name";
+        }
+
+        if (dialogueText != null)
+        {
+            Debug.Log($"Setting dialogue text: {currentNPC?.npcBackstory ?? "No Story"}");
+            dialogueText.text = currentNPC?.npcBackstory ?? "No Story";
+        }
+
+        if (avatarImage != null)
+        {
+            Debug.Log($"Setting avatar image sprite: {(currentNPC?.avatarSprite != null ? currentNPC.avatarSprite.name : "null")}");
+            avatarImage.sprite = currentNPC?.avatarSprite;
+        }
 
         gameObject.SetActive(true);
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public NPCPresentationManager npcPresentationManager;
+    public GameObject npcPresentationPanel;
 
     public static GameManager Instance;
 
@@ -31,11 +32,21 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+        npcPresentationManager.OnNPCAccepted += HandleNPCAccepted;
+        npcPresentationManager.OnPresentationComplete += OnPresentationCompleteHandler;
+        npcPresentationManager.OnPresentationComplete += SpawnAcceptedNPCs;
     }
 
     void Start()
     {
-        SpawnRandomNPC();
+        StartNewDay();
+    }
+
+    private void OnDestroy()
+    {
+        npcPresentationManager.OnNPCAccepted -= HandleNPCAccepted;
+        npcPresentationManager.OnPresentationComplete -= OnPresentationCompleteHandler;
+        npcPresentationManager.OnPresentationComplete += SpawnAcceptedNPCs;
     }
 
     void Update()
@@ -46,6 +57,7 @@ public class GameManager : MonoBehaviour
         {
             dayTimer = 0f;
             DayPassed();
+            StartNewDay();
         }
 
         if (totalFood <= 0 || totalWater <= 0 || totalMorale <= 0)
@@ -132,18 +144,22 @@ public class GameManager : MonoBehaviour
         return successChance;
     }
 
-    public void SpawnRandomNPC()
+    // -------------------------
+    //    NPC Spawning
+    // -------------------------
+
+    public NPC_Info SpawnRandomNPC()
     {
         if (npcPrefabs == null || npcPrefabs.Length == 0)
         {
             Debug.LogWarning("No NPC prefabs assigned!");
-            return;
+            return null;
         }
 
         if (NPC_Stories.npcStories == null || NPC_Stories.npcStories.Count == 0)
         {
             Debug.LogWarning("No NPC stories found!");
-            return;
+            return null;
         }
 
         // Pick a random prefab
@@ -152,6 +168,9 @@ public class GameManager : MonoBehaviour
 
         // Instantiate it (optionally set position and rotation)
         GameObject npcInstance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+
+        // Deactivate the NPC instance to prevent it from being visible immediately
+        npcInstance.SetActive(false);
 
         // Get the NPC_Wander component
         NPC_Wander wander = npcInstance.GetComponent<NPC_Wander>();
@@ -178,23 +197,86 @@ public class GameManager : MonoBehaviour
         if (npcInfo != null)
         {
             // Assign random stats
-            npcInfo.food = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
-            npcInfo.water = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
-            npcInfo.morale = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
-            npcInfo.materials = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
-            npcInfo.strenght = UnityEngine.Random.Range(minStatValue, maxStatValue + 1);
+            npcInfo.food = story.food;
+            npcInfo.water = story.water;
+            npcInfo.morale = story.morale;
+            npcInfo.materials = story.materials;
+            npcInfo.strenght = story.strenght;
 
             // Assign a random backstory
             npcInfo.npcBackstory = story.npcBackstory;
 
             // Optionally assign a random or unique npcName (e.g. "NPC" + a number)
             npcInfo.npcName = story.npcName;
+
         }
         else
         {
             Debug.LogWarning("The instantiated NPC prefab does not have an NPC_Info component.");
         }
         Debug.Log($"NPC {npcInfo.npcName} spawned with backstory: {npcInfo.npcBackstory} and stats: Food={npcInfo.food}, Water={npcInfo.water}, Morale={npcInfo.morale}, Materials={npcInfo.materials}, Strength={npcInfo.strenght}.");
+        return npcInfo;
+    }
+
+    // -------------------------
+    //    Day Management
+    // -------------------------
+    public void StartNewDay()
+    {
+        spawnedNPCs.Clear();
+
+        for (int i = 0; i < 6; i++)
+        {
+            spawnedNPCs.Add(SpawnRandomNPC());
+        }
+
+        npcPresentationPanel.SetActive(true);
+
+        npcPresentationManager.PresentNPCs(spawnedNPCs);
+    }
+
+    private void HandleNPCAccepted(NPC_Info npc)
+    {
+        acceptedNPCs.Add(npc);
+    }
+
+    public void SpawnAcceptedNPCs()
+    {
+        foreach (var npc in acceptedNPCs)
+        {
+            // Here you can implement logic to spawn the accepted NPCs in the game world
+            // For example, instantiate them at a specific location or add them to a list
+            Debug.Log($"Accepted NPC: {npc.npcName} with backstory: {npc.npcBackstory}.");
+            SpawnNPCInWorld(npc);
+        }
+    }
+
+    private void SpawnNPCInWorld(NPC_Info npc)
+    {
+        GameObject npcGameObject = npc.gameObject;
+        npcGameObject.SetActive(true);
+
+        var wander = npcGameObject.GetComponent<NPC_Wander>();
+        if (wander != null)
+        {
+            float halfWidth = wander.wanderWidth / 2f;
+            float halfHeight = wander.wanderHeight / 2f;
+
+            float randomX = UnityEngine.Random.Range(wander.startingPosition.x - halfWidth, wander.startingPosition.x + halfWidth);
+            float randomY = UnityEngine.Random.Range(wander.startingPosition.y - halfHeight, wander.startingPosition.y + halfHeight);
+
+            npcGameObject.transform.position = new Vector2(randomX, randomY);
+        }
+        else
+        {
+            npcGameObject.transform.position = Vector3.zero;
+        }
+    }
+
+    private void OnPresentationCompleteHandler()
+    {
+        Debug.Log("NPC presentation complete, hiding panel.");
+        npcPresentationPanel.SetActive(false); // Hide the NPC presentation panel during gameplay
     }
 }
 

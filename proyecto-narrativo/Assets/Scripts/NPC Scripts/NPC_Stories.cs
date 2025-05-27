@@ -37,10 +37,21 @@ public class NPCStory
     {
     public string npcName;
     public string npcBackstory;
+    // Attributes for NPC
+    public int food;
+    public int water;
+    public int morale;
+    public int materials;
+    public int strenght;
 
-    public NPCStory(string name, string backstory)
+    public NPCStory(string name, string backstory, int food = 0, int water = 0, int morale = 0, int materials = 0, int strenght = 0)
     {
         npcName = name;
         npcBackstory = backstory;
+        this.food = food;
+        this.water = water;
+        this.morale = morale;
+        this.materials = materials;
+        this.strenght = strenght;
     }
 }
