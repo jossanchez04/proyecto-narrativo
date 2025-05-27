@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public static int totalWater = 10;
     public static int totalMorale = 10;
 
-    public float dayLength = 5f;
+    public float dayLength = 25f;
     private float dayTimer = 0f;
 
     private List<NPC_Info> spawnedNPCs = new List<NPC_Info>();
@@ -51,13 +51,16 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        dayTimer += Time.deltaTime;
-
-        if (dayTimer >= dayLength)
+        if (!npcPresentationPanel.activeSelf)
         {
-            dayTimer = 0f;
-            DayPassed();
-            StartNewDay();
+            dayTimer += Time.deltaTime;
+
+            if (dayTimer >= dayLength)
+            {
+                dayTimer = 0f;
+                DayPassed();
+                StartNewDay();
+            }
         }
 
         if (totalFood <= 0 || totalWater <= 0 || totalMorale <= 0)
@@ -194,6 +197,26 @@ public class GameManager : MonoBehaviour
         // Get the NPC_Info component
         NPC_Info npcInfo = npcInstance.GetComponent<NPC_Info>();
 
+        Debug.Log($"Instantiated NPC prefab: {prefab.name}");
+        switch (prefab.name)
+        {
+            case "NPC1":
+                npcInfo.avatarSprite = Resources.Load<Sprite>("Avatars/NPC1");
+                break;
+            case "NPC2":
+                npcInfo.avatarSprite = Resources.Load<Sprite>("Avatars/NPC2");
+                break;
+            case "NPC3":
+                npcInfo.avatarSprite = Resources.Load<Sprite>("Avatars/NPC3");
+                break;
+            case "NPC4":
+                npcInfo.avatarSprite = Resources.Load<Sprite>("Avatars/NPC4");
+                break;
+            case "NPC5":
+                npcInfo.avatarSprite = Resources.Load<Sprite>("Avatars/NPC5");
+                break;
+        }
+
         if (npcInfo != null)
         {
             // Assign random stats
@@ -208,7 +231,6 @@ public class GameManager : MonoBehaviour
 
             // Optionally assign a random or unique npcName (e.g. "NPC" + a number)
             npcInfo.npcName = story.npcName;
-
         }
         else
         {

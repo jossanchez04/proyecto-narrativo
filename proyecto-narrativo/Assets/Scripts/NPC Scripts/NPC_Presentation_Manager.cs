@@ -65,7 +65,7 @@ public class NPCPresentationManager : MonoBehaviour
 
         if (avatarImage != null)
         {
-            Debug.Log($"Setting avatar image sprite: {(currentNPC?.avatarSprite != null ? currentNPC.avatarSprite.name : "null")}");
+            Debug.Log($"Setting avatar image sprite: {currentNPC?.avatarSprite ?? null}");
             avatarImage.sprite = currentNPC?.avatarSprite;
         }
 
