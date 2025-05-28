@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,9 +17,26 @@ public class GameManager : MonoBehaviour
 
     public static event Action OnDayPassedEvent;
 
-    public static int totalFood = 10;
-    public static int totalWater = 10;
-    public static int totalMorale = 10;
+    public float shelterCapacity;
+
+    private int numberOfSurvivors;
+
+    public Text foodTextDisplay;
+    public Text waterTextDisplay;
+    public Text moraleTextDisplay;
+    public Text materialsTextDisplay;
+    public Text survivorsTextDisplay;
+
+    public static int totalFood;
+    public static int totalWater;
+    public static int totalMorale;
+    public static int totalMaterials;
+
+
+    public static float totalFoodPercentage;
+    public static float totalWaterPercentage;
+    public static float totalMoralePercentage;
+    
 
     public float dayLength = 25f;
     private float dayTimer = 0f;
@@ -40,6 +58,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         StartNewDay();
+        //DayPassed();
     }
 
     private void OnDestroy()
@@ -58,8 +77,8 @@ public class GameManager : MonoBehaviour
             if (dayTimer >= dayLength)
             {
                 dayTimer = 0f;
-                DayPassed();
                 StartNewDay();
+                //DayPassed();
             }
         }
 
@@ -72,6 +91,30 @@ public class GameManager : MonoBehaviour
 
     private void DayPassed()
     {
+        numberOfSurvivors = 0;
+        foreach (var npc in acceptedNPCs)
+        {
+            numberOfSurvivors += 1;
+
+            totalFood += npc.food;
+            totalWater += npc.water;
+            totalMorale += npc.morale;
+            totalMaterials += npc.materials;
+        }
+        totalFood -= numberOfSurvivors;
+        totalWater -= numberOfSurvivors;
+        totalMorale -= numberOfSurvivors;
+
+        totalFoodPercentage = Mathf.RoundToInt(Mathf.Clamp01((float)totalFood / shelterCapacity)*100);
+        totalWaterPercentage = Mathf.RoundToInt(Mathf.Clamp01((float)totalWater / shelterCapacity)*100);
+        totalMoralePercentage = Mathf.RoundToInt(Mathf.Clamp01((float)totalMorale / shelterCapacity)*100);
+
+        foodTextDisplay.text = totalFoodPercentage.ToString() + "%";
+        waterTextDisplay.text = totalWaterPercentage.ToString() + "%";
+        moraleTextDisplay.text = totalMoralePercentage.ToString() + "%";
+        materialsTextDisplay.text = totalMaterials.ToString();
+        survivorsTextDisplay.text = numberOfSurvivors.ToString();
+
         OnDayPassedEvent?.Invoke();
         Debug.Log("A new day has passed!");
         Debug.Log($"Food: {totalFood}, Water: {totalWater}, Morale: {totalMorale}");
@@ -257,6 +300,11 @@ public class GameManager : MonoBehaviour
         npcPresentationManager.PresentNPCs(spawnedNPCs);
     }
 
+
+
+
+
+
     private void HandleNPCAccepted(NPC_Info npc)
     {
         acceptedNPCs.Add(npc);
@@ -299,6 +347,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("NPC presentation complete, hiding panel.");
         npcPresentationPanel.SetActive(false); // Hide the NPC presentation panel during gameplay
+        DayPassed();
     }
 }
 

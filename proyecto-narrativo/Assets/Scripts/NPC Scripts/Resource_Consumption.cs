@@ -3,12 +3,12 @@ using UnityEngine;
 public class Resource_Consumption : MonoBehaviour
 {
     [Header("NPC Personal Stats")]
-    public int food = 1;
-    public int water = 1;
-    public int morale = 1;
+    public int food;
+    public int water;
+    public int morale;
 
     [Header("NPC Morale Impact")]
-    public int moraleThreshold = 3;
+    public int moraleThreshold;
 
     void OnEnable()
     {

@@ -23,8 +23,8 @@ public class NPCClickHandler : MonoBehaviour
 
                 if (npc != null)
                 {
-                    Debug.Log($"NPC clicked: {npc.npcName}, NPC Stats: {npc.water}, {npc.food}, {npc.materials}, {npc.morale}, {npc.strenght}, NPC Story: {npc.npcBackstory}");
-                    //NPCUIManager.Instance.ShowNPCPopup(npc);
+                    //Debug.Log($"NPC clicked: {npc.npcName}, NPC Stats: {npc.water}, {npc.food}, {npc.materials}, {npc.morale}, {npc.strenght}, NPC Story: {npc.npcBackstory}");
+                    NPCUIManager.Instance.ShowNPCPopup(npc);
                 }
                 else
                 {
