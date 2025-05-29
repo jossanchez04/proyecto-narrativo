@@ -19,10 +19,17 @@ public class NPC_Wander : MonoBehaviour
     private bool xDone = false;
     private bool yDone = false;
 
+    private Vector2 lastPosition;
+    private float stuckTimer = 0f;
+    private float stuckTimeThreshold = 1f; // Tiempo para considerar atascado
+    private float minMovementThreshold = 0.01f;
+
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
+        lastPosition = rb.position;
     }
 
     private void OnEnable()
@@ -41,6 +48,27 @@ public class NPC_Wander : MonoBehaviour
         MoveOneDirection();
 
         Vector2 currentPos = transform.position;
+
+        float distanceMoved = Vector2.Distance(currentPos, lastPosition);
+
+        if (distanceMoved < minMovementThreshold)
+        {
+            stuckTimer += Time.deltaTime;
+            if (stuckTimer > stuckTimeThreshold)
+            {
+                // Está atascado, cambiar destino
+                StartCoroutine(PauseAndPickNewDestination());
+                stuckTimer = 0f;
+                return; // Salir para evitar más movimientos este frame
+            }
+        }
+        else
+        {
+            stuckTimer = 0f; // Se movió, reset timer
+        }
+
+        lastPosition = currentPos;
+
         if (!xDone && Mathf.Abs(target.x - currentPos.x) < 1f)
         {
             rb.linearVelocity = Vector2.zero;

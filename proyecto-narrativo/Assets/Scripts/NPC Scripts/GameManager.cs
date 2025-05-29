@@ -46,6 +46,9 @@ public class GameManager : MonoBehaviour
     private List<NPC_Info> expeditionParty = new List<NPC_Info>();
     public int maxExpeditionSize = 4;
 
+    public LayerMask obstacleLayerMask;
+    public float npcRadius = 0.3f;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -57,6 +60,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        totalFood = 10;
+        totalWater = 10;
+        totalMorale = 10;
+        totalMaterials = 10;
+
         StartNewDay();
         //DayPassed();
     }
@@ -101,9 +109,6 @@ public class GameManager : MonoBehaviour
             totalMorale += npc.morale;
             totalMaterials += npc.materials;
         }
-        totalFood -= numberOfSurvivors;
-        totalWater -= numberOfSurvivors;
-        totalMorale -= numberOfSurvivors;
 
         totalFoodPercentage = Mathf.RoundToInt(Mathf.Clamp01((float)totalFood / shelterCapacity)*100);
         totalWaterPercentage = Mathf.RoundToInt(Mathf.Clamp01((float)totalWater / shelterCapacity)*100);
@@ -221,16 +226,40 @@ public class GameManager : MonoBehaviour
         // Get the NPC_Wander component
         NPC_Wander wander = npcInstance.GetComponent<NPC_Wander>();
 
+        Vector2 spawnPos = Vector2.zero;
+
         if (wander != null)
         {
-            // Random position inside wander area rectangle
             float halfWidth = wander.wanderWidth / 2f;
             float halfHeight = wander.wanderHeight / 2f;
 
-            float randomX = UnityEngine.Random.Range(wander.startingPosition.x - halfWidth, wander.startingPosition.x + halfWidth);
-            float randomY = UnityEngine.Random.Range(wander.startingPosition.y - halfHeight, wander.startingPosition.y + halfHeight);
+            int maxAttempts = 20;
+            bool positionFound = false;
 
-            npcInstance.transform.position = new Vector2(randomX, randomY);
+            for (int i = 0; i < maxAttempts; i++)
+            {
+                float randomX = UnityEngine.Random.Range(wander.startingPosition.x - halfWidth, wander.startingPosition.x + halfWidth);
+                float randomY = UnityEngine.Random.Range(wander.startingPosition.y - halfHeight, wander.startingPosition.y + halfHeight);
+
+                Vector2 candidatePos = new Vector2(randomX, randomY);
+
+                // Check if this position overlaps any obstacle collider
+                Collider2D hit = Physics2D.OverlapCircle(candidatePos, npcRadius, obstacleLayerMask);
+                if (hit == null)
+                {
+                    spawnPos = candidatePos;
+                    positionFound = true;
+                    break;
+                }
+            }
+
+            if (!positionFound)
+            {
+                Debug.LogWarning("No free spawn position found after multiple attempts. Spawning at starting position.");
+                spawnPos = wander.startingPosition;
+            }
+
+            npcInstance.transform.position = spawnPos;
         }
         else
         {
