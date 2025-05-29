@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -93,7 +94,7 @@ public class GameManager : MonoBehaviour
         if (totalFood <= 0 || totalWater <= 0 || totalMorale <= 0)
         {
             Debug.Log("Game Over! You have run out of resources.");
-            
+            SceneManager.LoadScene("GameOver");
         }
     }
 
