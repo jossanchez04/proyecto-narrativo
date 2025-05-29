@@ -14,6 +14,8 @@ public class NPCUIManager : MonoBehaviour
     public TMP_Text moraleText;
     public TMP_Text materialsText;
     public TMP_Text fuerzaText;
+    public int counterExcursion;
+    public Text cantidadExcursion;
 
     private NPC_Info currentNPC;
 
@@ -25,6 +27,7 @@ public class NPCUIManager : MonoBehaviour
 
     void Start()
     {
+        counterExcursion = 0;
         popupPanel.SetActive(false);
         addToExpeditionButton.onClick.RemoveAllListeners();
         addToExpeditionButton.onClick.AddListener(OnAddToExpeditionClicked);
@@ -59,7 +62,18 @@ public class NPCUIManager : MonoBehaviour
     {
         if (currentNPC != null)
         {
-            GameManager.Instance.AddToExpedition(currentNPC);
+            bool enviado = GameManager.Instance.AddToExpedition(currentNPC);
+            if (enviado)
+            {
+                currentNPC.gameObject.SetActive(false);
+                counterExcursion += 1;
+                cantidadExcursion.text = counterExcursion.ToString();
+                HidePopup();
+            }
+            else
+            {
+                Debug.Log("No se pudo enviar a la expedición. Límite alcanzado.");
+            }
         }
     }
 }

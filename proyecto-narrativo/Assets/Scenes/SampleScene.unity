@@ -4621,6 +4621,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasUI
       objectReference: {fileID: 0}
+    - target: {fileID: 1592679414452674008, guid: 6389b74818bc5b04985b88dce3b8f7af, type: 3}
+      propertyPath: cantidadExcursion
+      value: 
+      objectReference: {fileID: 1235403673}
     - target: {fileID: 2761867578092832031, guid: 6389b74818bc5b04985b88dce3b8f7af, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 95.399994
@@ -10694,6 +10698,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163282069}
   m_CullTransparentMesh: 1
+--- !u!114 &1235403673 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9151354966921586854, guid: 6389b74818bc5b04985b88dce3b8f7af, type: 3}
+  m_PrefabInstance: {fileID: 798793404}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1281534474
 GameObject:
   m_ObjectHideFlags: 0
@@ -10914,7 +10929,7 @@ MonoBehaviour:
   moraleTextDisplay: {fileID: 1661288256}
   materialsTextDisplay: {fileID: 1023823800}
   survivorsTextDisplay: {fileID: 702605520}
-  dayLength: 40
+  dayLength: 15
   maxExpeditionSize: 4
   obstacleLayerMask:
     serializedVersion: 2

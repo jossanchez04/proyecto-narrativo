@@ -187,15 +187,78 @@ public class GameManager : MonoBehaviour
             totalWaterEffect += npc.water;
         }
 
-        float strengthScore = totalStrength * 10f;
+        // Ajustes de ponderación más estrictos
+        float strengthScore = totalStrength * 5f;               // Antes 10f
+        float resourceScore = (totalFoodEffect + totalWaterEffect) * 1f; // Antes 2f
 
-        float resourceScore = (totalFoodEffect + totalWaterEffect) * 2f;
+        // Factor de materiales del refugio
+        float materialsBonus = 0f;
+        if (totalMaterials >= 0 && totalMaterials < 10)
+        {
+            materialsBonus = 2f; // Pequeña ayuda
+        }
+        else if (totalMaterials >= 10 && totalMaterials < 15)
+        {
+            materialsBonus = 5f; // Ayuda media
+        }
+        else if (totalMaterials >= 15)
+        {
+            materialsBonus = 10f; // Ayuda grande
+        }
 
-        float baseChance = strengthScore + resourceScore;
+            // Gastar materiales en la expedición
+        totalMaterials = 0;
+
+        float baseChance = strengthScore + resourceScore + materialsBonus;
         float successChance = Mathf.Clamp(baseChance, 0f, 100f);
 
         Debug.Log($"Probabilidad de éxito de la expedición: {successChance}%");
         return successChance;
+    }
+
+    public void ResolveExpedition(float successChance)
+    {
+        float roll = UnityEngine.Random.Range(0f, 100f);
+        NPCUIManager.Instance.counterExcursion = 0;
+        NPCUIManager.Instance.cantidadExcursion.text = "0";
+
+        if (roll <= successChance)
+        {
+            Debug.Log("¡Expedición exitosa!");
+
+            // Recompensas aleatorias
+            int gainedFood = UnityEngine.Random.Range(3, 10);
+            int gainedWater = UnityEngine.Random.Range(2, 12);
+            int gainedMorale = UnityEngine.Random.Range(1, 8);
+
+            GameManager.totalFood += gainedFood;
+            GameManager.totalWater += gainedWater;
+            GameManager.totalMorale += gainedMorale;
+
+            Debug.Log($"Recompensas: +{gainedFood} comida, +{gainedWater} agua, +{gainedMorale} moral.");
+            foreach (var npc in expeditionParty)
+            {
+                npc.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            Debug.Log("La expedición falló. Los NPCs han muerto.");
+
+            foreach (var npc in expeditionParty)
+            {
+                if (acceptedNPCs.Contains(npc))
+                {
+                    acceptedNPCs.Remove(npc);
+                    Destroy(npc.gameObject); // También destruye su objeto en la escena
+                    numberOfSurvivors = -1;
+                }
+            }
+        }
+
+        expeditionParty.Clear(); // Limpiar la lista de expedición tras la resolución
+        
+        
     }
 
     // -------------------------
@@ -379,6 +442,11 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("NPC presentation complete, hiding panel.");
         npcPresentationPanel.SetActive(false); // Hide the NPC presentation panel during gameplay
+        float succesRate = SimulateExpeditionSuccess();
+        if (succesRate != 0f)
+        {
+            ResolveExpedition(succesRate);
+        }
         DayPassed();
     }
 }
