@@ -10914,7 +10914,7 @@ MonoBehaviour:
   moraleTextDisplay: {fileID: 1661288256}
   materialsTextDisplay: {fileID: 1023823800}
   survivorsTextDisplay: {fileID: 702605520}
-  dayLength: 30
+  dayLength: 40
   maxExpeditionSize: 4
   obstacleLayerMask:
     serializedVersion: 2

@@ -8,13 +8,13 @@ public class NPC_Stories : MonoBehaviour
         new NPCStory(
             "Linares",
             "Me llamo Linares. Antes del colapso, fui agricultor en tierras áridas donde el sol castigaba sin misericordia y el agua se medía gota a gota. Aprendí a sacar alimento de la tierra seca y a cuidar cada semilla como si fuera un tesoro. Tras el desastre, mi campo quedó seco y sin futuro, y tuve que dejarlo todo atrás. Ahora llego a este refugio rogando por un pedazo de tierra donde plantar. Sé que puedo alimentar a muchos si me dan esa oportunidad, aunque debo ser honesto: mis cultivos necesitan mucha agua, y sé que ese recurso es escaso. Daré lo mejor de mí para hacer que nuestro refugio prospere.",
-            food: 4, water: -2, morale: 3, materials: 1, strenght: 1
+            food: 5, water: -2, morale: 3, materials: 1, strenght: 1
         ),
 
         new NPCStory(
             "Hugo",
             "Mi nombre es Hugo. Fui mecánico en la ciudad y cuando la civilización se vino abajo, mi taller se convirtió en mi refugio. Recogía piezas rotas, hierros y cables desechados para darles nueva vida y mantener funcionando lo que pudiera. Aquí puedo ayudar con materiales y reparaciones, pero soy un hombre solitario, poco dado a las palabras amables y a levantar ánimos. A veces, mi presencia puede pesar y bajar la moral de los demás. Sin embargo, si me respetan y entienden mi carácter, prometo ser un pilar fuerte para este refugio.",
-            food: -1, water: 0, morale: -3, materials: 5, strenght: 3
+            food: -1, water: 1, morale: -3, materials: 5, strenght: 3
         ),
 
         new NPCStory(
@@ -26,25 +26,25 @@ public class NPC_Stories : MonoBehaviour
         new NPCStory(
             "Jared",
             "Soy Jared, exsoldado y experto en supervivencia. He recorrido terrenos peligrosos y sé cómo defender y proveer para un grupo. Puedo liderar expediciones para conseguir recursos y proteger este refugio de cualquier amenaza. Sin embargo, las noches son largas y mis pesadillas implacables. A menudo, mi carácter duro y mal humor genera tensiones en el grupo. Necesito respeto y espacio para controlar mis demonios, pero si me lo dan, seré un aliado invaluable.",
-            food: 0, water: -1, morale: -3, materials: 4, strenght: 5
+            food: -1, water: -1, morale: -3, materials: 4, strenght: 5
         ),
 
         new NPCStory(
             "Noel",
             "Soy Noel, chef de profesión. Sé transformar los pocos ingredientes en comidas que alimentan el cuerpo y levantan el ánimo. Cocinar es mi manera de mantener la esperanza y la unión. Sin embargo, padezco alergias que me obligan a consumir alimentos especiales y no siempre puedo compartir plenamente. Esto hace que a veces gaste más recursos de los que produzco, pero la alegría y moral que aporto justifican ese costo. Si me aceptas, prometo que nadie aquí tendrá hambre sin sabor.",
-            food: 3, water: 1, morale: 4, materials: -2, strenght: 0
+            food: 5, water: 2, morale: 4, materials: -2, strenght: 0
         ),
 
         new NPCStory(
             "Samir",
             "Me llamo Samir y soy ingeniero hidráulico. Cuando todo se vino abajo, usé mis conocimientos para construir sistemas improvisados que recolectan y purifican agua, incluso cuando la fuente parece imposible. Puedo traer abundante agua al refugio y mejorar su uso. Confieso que a veces me obsesiono con mis proyectos y dejo de lado a las personas, lo que puede bajar la moral de quienes me rodean. Pero si me das espacio para trabajar, seré fundamental para mantenernos hidratados y fuertes.",
-            food: 0, water: 5, morale: -1, materials: 3, strenght: 2
+            food: -1, water: 5, morale: -1, materials: 3, strenght: 2
         ),
 
         new NPCStory(
             "Evaristo",
             "Soy Evaristo, antes bibliotecario y organizador comunitario. Mi trabajo era mantener vivas las historias y las esperanzas de mi gente, y eso es lo que ofrezco aquí: relatos, liderazgo y unión. No traigo fuerza ni materiales, pero la moral que genero puede marcar la diferencia entre seguir luchando o caer en la desesperanza. Mi cuerpo es frágil y no puedo acompañar expediciones largas, pero siempre estaré aquí para sostener el espíritu del refugio.",
-            food: 0, water: 0, morale: 5, materials: 0, strenght: 0
+            food: 0, water: 1, morale: 5, materials: 0, strenght: 0
         ),
 
         new NPCStory(
@@ -82,7 +82,7 @@ public class NPC_Stories : MonoBehaviour
         new NPCStory(
             "Viktor",
             "Me llamo Viktor. He aprendido a ser autosuficiente en estos tiempos difíciles, y siempre consigo lo que necesito para sobrevivir. Puedo aportar materiales valiosos y fuerza para las expediciones. Soy directo y no suelo andar con rodeos, prefiero la acción a las palabras, y eso a veces puede causar diferencias con otros. Pero cuando se trata de proteger el refugio, soy alguien en quien se puede confiar.",
-            food: -4, water: -5, morale: -6, materials: 1, strenght: 5
+            food: -5, water: -5, morale: -6, materials: 1, strenght: 5
         ),
         new NPCStory(
             "Esteban",
