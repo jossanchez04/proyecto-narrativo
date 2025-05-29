@@ -155,6 +155,8 @@ public class GameManager : MonoBehaviour
         }
 
         expeditionParty.Add(npc);
+        acceptedNPCs.Remove(npc);
+        npc.gameObject.SetActive(false);
         Debug.Log($"{npc.npcName} agregado a la expedición.");
 
         return true;
