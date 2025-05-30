@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     public static int totalMorale;
     public static int totalMaterials;
 
+    private int currentDay = 1;
+    private int maxDays = 5;
 
     public static float totalFoodPercentage;
     public static float totalWaterPercentage;
@@ -417,6 +419,14 @@ public class GameManager : MonoBehaviour
     // -------------------------
     public void StartNewDay()
     {
+        if (currentDay > maxDays)
+        {
+            Debug.Log("Se han alcanzado los 5 días. Fin del juego.");
+            SceneManager.LoadScene("PasoDeDias"); // Asegurate de que esta escena exista en el Build Settings
+            return;
+        }
+        currentDay++;
+
         spawnedNPCs.Clear();
 
         List<int> storiesAvailables = new List<int>();
