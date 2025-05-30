@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using JetBrains.Annotations;
 
 public class GameManager : MonoBehaviour
 {
@@ -296,7 +297,7 @@ public class GameManager : MonoBehaviour
     //    NPC Spawning
     // -------------------------
 
-    public NPC_Info SpawnRandomNPC()
+    public NPC_Info SpawnRandomNPC(int randomIndex)
     {
         if (npcPrefabs == null || npcPrefabs.Length == 0)
         {
@@ -312,7 +313,9 @@ public class GameManager : MonoBehaviour
 
         // Pick a random prefab
         GameObject prefab = npcPrefabs[UnityEngine.Random.Range(0, npcPrefabs.Length)];
-        NPCStory story = NPC_Stories.npcStories[UnityEngine.Random.Range(0, NPC_Stories.npcStories.Count)];
+
+        // Pick a random NPC story but ensure they dont repeat
+        NPCStory story = NPC_Stories.npcStories[randomIndex];
 
         // Instantiate it (optionally set position and rotation)
         GameObject npcInstance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
@@ -416,9 +419,21 @@ public class GameManager : MonoBehaviour
     {
         spawnedNPCs.Clear();
 
+        List<int> storiesAvailables = new List<int>();
+
+        for (int i = 0; i <= 14; i++)
+        {
+            storiesAvailables.Add(i);
+        }
+
         for (int i = 0; i < 6; i++)
         {
-            spawnedNPCs.Add(SpawnRandomNPC());
+            int randomIndex = UnityEngine.Random.Range(0, storiesAvailables.Count);
+            int storyIndex = storiesAvailables[randomIndex];
+
+            storiesAvailables.RemoveAt(randomIndex);
+
+            spawnedNPCs.Add(SpawnRandomNPC(storyIndex));
         }
 
         npcPresentationPanel.SetActive(true);
