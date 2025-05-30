@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 using System.Collections;
 using JetBrains.Annotations;
 
@@ -15,8 +16,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject[] npcPrefabs;
 
+    private float timeElapsed = 0f;
+
     public int minStatValue = -5;
     public int maxStatValue = 5;
+    public Button closeExpeditionResultsButton;
+    public GameObject popupPanelExpeditionResults;
 
     public static event Action OnDayPassedEvent;
 
@@ -30,17 +35,22 @@ public class GameManager : MonoBehaviour
     public Text materialsTextDisplay;
     public Text survivorsTextDisplay;
 
+    public Text reloj;
+
     public static int totalFood;
     public static int totalWater;
     public static int totalMorale;
     public static int totalMaterials;
 
-    private int currentDay = 1;
-    private int maxDays = 5;
 
     public static float totalFoodPercentage;
     public static float totalWaterPercentage;
     public static float totalMoralePercentage;
+
+    public TMP_Text expeditionState;
+    public Text recompensaFood;
+    public Text recompensaMorale;
+    public Text recompensaWater;
     
 
     public float dayLength = 25f;
@@ -71,6 +81,10 @@ public class GameManager : MonoBehaviour
         totalMorale = 10;
         totalMaterials = 10;
 
+        popupPanelExpeditionResults.SetActive(false);
+        closeExpeditionResultsButton.onClick.RemoveAllListeners();
+        closeExpeditionResultsButton.onClick.AddListener(HidePopupExpeditionResults);
+
         StartNewDay();
         //DayPassed();
     }
@@ -86,8 +100,12 @@ public class GameManager : MonoBehaviour
     {
         if (!npcPresentationPanel.activeSelf)
         {
-            dayTimer += Time.deltaTime;
+            
+            timeElapsed += Time.deltaTime;
+            int inGameHour = Mathf.FloorToInt(timeElapsed) % 24;
+            reloj.text = inGameHour.ToString("00") + ":00";
 
+            dayTimer += Time.deltaTime;
             if (dayTimer >= dayLength)
             {
                 dayTimer = 0f;
@@ -245,6 +263,14 @@ public class GameManager : MonoBehaviour
             int gainedWater = UnityEngine.Random.Range(2, 12);
             int gainedMorale = UnityEngine.Random.Range(1, 8);
 
+            popupPanelExpeditionResults.SetActive(true);
+
+            expeditionState.text = "Exito";
+
+            recompensaFood.text = gainedFood.ToString();
+            recompensaWater.text = gainedWater.ToString();
+            recompensaMorale.text = gainedMorale.ToString();
+
             GameManager.totalFood += gainedFood;
             GameManager.totalWater += gainedWater;
             GameManager.totalMorale += gainedMorale;
@@ -253,6 +279,10 @@ public class GameManager : MonoBehaviour
             foreach (var npc in expeditionParty)
             {
                 npc.gameObject.SetActive(true);
+                if (!acceptedNPCs.Contains(npc))
+                {
+                    acceptedNPCs.Add(npc);
+                }
             }
             if (expeditionResultText != null)
             {
@@ -264,6 +294,14 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("La expedición falló. Los NPCs han muerto.");
+
+            popupPanelExpeditionResults.SetActive(true);
+
+            expeditionState.text = "Fracaso, todos han muerto";
+
+            recompensaFood.text = "0";
+            recompensaWater.text = "0";
+            recompensaMorale.text = "0";
 
             foreach (var npc in expeditionParty)
             {
@@ -286,20 +324,22 @@ public class GameManager : MonoBehaviour
         
         
     }
-
     IEnumerator ClearExpeditionTextAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         if (expeditionResultText != null)
             expeditionResultText.text = "";
     }
-
+    public void HidePopupExpeditionResults()
+    {
+        popupPanelExpeditionResults.SetActive(false);
+    }
 
     // -------------------------
     //    NPC Spawning
     // -------------------------
 
-    public NPC_Info SpawnRandomNPC(int randomIndex)
+    public NPC_Info SpawnRandomNPC()
     {
         if (npcPrefabs == null || npcPrefabs.Length == 0)
         {
@@ -315,9 +355,7 @@ public class GameManager : MonoBehaviour
 
         // Pick a random prefab
         GameObject prefab = npcPrefabs[UnityEngine.Random.Range(0, npcPrefabs.Length)];
-
-        // Pick a random NPC story but ensure they dont repeat
-        NPCStory story = NPC_Stories.npcStories[randomIndex];
+        NPCStory story = NPC_Stories.npcStories[UnityEngine.Random.Range(0, NPC_Stories.npcStories.Count)];
 
         // Instantiate it (optionally set position and rotation)
         GameObject npcInstance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
@@ -419,31 +457,11 @@ public class GameManager : MonoBehaviour
     // -------------------------
     public void StartNewDay()
     {
-        if (currentDay > maxDays)
-        {
-            Debug.Log("Se han alcanzado los 5 días. Fin del juego.");
-            SceneManager.LoadScene("PasoDeDias"); // Asegurate de que esta escena exista en el Build Settings
-            return;
-        }
-        currentDay++;
-
         spawnedNPCs.Clear();
-
-        List<int> storiesAvailables = new List<int>();
-
-        for (int i = 0; i <= 14; i++)
-        {
-            storiesAvailables.Add(i);
-        }
 
         for (int i = 0; i < 6; i++)
         {
-            int randomIndex = UnityEngine.Random.Range(0, storiesAvailables.Count);
-            int storyIndex = storiesAvailables[randomIndex];
-
-            storiesAvailables.RemoveAt(randomIndex);
-
-            spawnedNPCs.Add(SpawnRandomNPC(storyIndex));
+            spawnedNPCs.Add(SpawnRandomNPC());
         }
 
         npcPresentationPanel.SetActive(true);
