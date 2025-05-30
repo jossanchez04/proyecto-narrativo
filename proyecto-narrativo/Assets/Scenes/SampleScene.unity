@@ -4780,6 +4780,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6600833354698205166, guid: 6389b74818bc5b04985b88dce3b8f7af, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1163282070}
+    - targetCorrespondingSourceObject: {fileID: 6600833354698205166, guid: 6389b74818bc5b04985b88dce3b8f7af, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1256991238}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6389b74818bc5b04985b88dce3b8f7af, type: 3}
 --- !u!1 &839926169
@@ -10709,6 +10712,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1256991237
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1256991238}
+  - component: {fileID: 1256991240}
+  - component: {fileID: 1256991239}
+  m_Layer: 5
+  m_Name: Text (Legacy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1256991238
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256991237}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1045859042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -4.7409, y: -234.5}
+  m_SizeDelta: {x: 336.3408, y: 14.9838}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1256991239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256991237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1256991240
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256991237}
+  m_CullTransparentMesh: 1
 --- !u!1 &1281534474
 GameObject:
   m_ObjectHideFlags: 0
@@ -10929,8 +11011,9 @@ MonoBehaviour:
   moraleTextDisplay: {fileID: 1661288256}
   materialsTextDisplay: {fileID: 1023823800}
   survivorsTextDisplay: {fileID: 702605520}
-  dayLength: 15
+  dayLength: 40
   maxExpeditionSize: 4
+  expeditionResultText: {fileID: 1256991239}
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -10975,7 +11058,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: d0c1ca88eb4c9eb43a4efef9438d4102, type: 3}
   m_Resource: {fileID: 8300000, guid: d0c1ca88eb4c9eb43a4efef9438d4102, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.4
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0

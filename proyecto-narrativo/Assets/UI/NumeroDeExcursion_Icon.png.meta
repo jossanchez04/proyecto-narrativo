@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      NumeroDeExcursion_Icon_0: 6333948506178354191
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

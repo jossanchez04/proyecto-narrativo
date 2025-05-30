@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
     private List<NPC_Info> acceptedNPCs = new List<NPC_Info>();
     private List<NPC_Info> expeditionParty = new List<NPC_Info>();
     public int maxExpeditionSize = 4;
+    public Text expeditionResultText;
 
     public LayerMask obstacleLayerMask;
     public float npcRadius = 0.3f;
@@ -222,6 +224,15 @@ public class GameManager : MonoBehaviour
         NPCUIManager.Instance.counterExcursion = 0;
         NPCUIManager.Instance.cantidadExcursion.text = "0";
 
+        if (expeditionResultText != null)
+            expeditionResultText.text = "";
+
+        List<string> npcNames = new List<string>();
+        foreach (var npc in expeditionParty)
+        {
+            npcNames.Add(npc.npcName);
+        }
+
         if (roll <= successChance)
         {
             Debug.Log("¡Expedición exitosa!");
@@ -240,6 +251,12 @@ public class GameManager : MonoBehaviour
             {
                 npc.gameObject.SetActive(true);
             }
+            if (expeditionResultText != null)
+            {
+                string names = string.Join(", ", npcNames);
+                expeditionResultText.text = $"<b>{names}</b> regresaron con vida.";
+                StartCoroutine(ClearExpeditionTextAfterDelay(5f));
+            }
         }
         else
         {
@@ -254,12 +271,26 @@ public class GameManager : MonoBehaviour
                     numberOfSurvivors = -1;
                 }
             }
+            if (expeditionResultText != null)
+            {
+                string names = string.Join(", ", npcNames);
+                expeditionResultText.text = $"<b>{names}</b> han muerto.";
+                StartCoroutine(ClearExpeditionTextAfterDelay(5f));
+            }
         }
 
         expeditionParty.Clear(); // Limpiar la lista de expedición tras la resolución
         
         
     }
+
+    IEnumerator ClearExpeditionTextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (expeditionResultText != null)
+            expeditionResultText.text = "";
+    }
+
 
     // -------------------------
     //    NPC Spawning
